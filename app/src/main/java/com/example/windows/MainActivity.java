@@ -10,27 +10,22 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TextView textView = (TextView) findViewById(R.id.text);
+        String url = textView.getText().toString().
+                replaceAll("\\d", "").trim();
+
+        textView.setText(url + (Counter.getCount()));
+
         prevBtnAct();
         nextBtnAct();
     }
 
-    public void openNewMainActivity (int i) {
-        TextView textView = (TextView) findViewById(R.id.text);
-        Intent intent = new Intent(this, MainActivity.class);
-        String url = textView.getText().toString().
-                replaceAll("\\d", "").trim();
-        int number = Integer.parseInt(textView.getText().toString().
-                replaceAll("\\D", "").trim());
-
-
-        textView.setText(url + (number + i));
-        startActivity(intent);
-    }
 
     public void prevBtnAct () {
         Button prevBtn = (Button) findViewById(R.id.previousBtn);
@@ -39,12 +34,8 @@ public class MainActivity extends AppCompatActivity {
         prevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (textView.getText().toString() == "https://hey-dude.com/1") {
-                    finish();
-                }
-                else {
-                    openNewMainActivity(-1);
-                }
+                Counter.reduceCount();
+                finish();
             }
         });
     }
@@ -52,11 +43,13 @@ public class MainActivity extends AppCompatActivity {
     public void nextBtnAct () {
         Button nextBtn = (Button) findViewById(R.id.nextBtn);
         final TextView textView = (TextView) findViewById(R.id.text);
+        final Intent intent = new Intent(this, MainActivity.class);
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openNewMainActivity(1);
+                Counter.raiseCount();
+                startActivity(intent);
             }
         });
     }
